@@ -1,18 +1,20 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
-<url><loc>/404.html</loc></url>
-<url><loc>/LICENSE-text.html</loc></url>
-<url><loc>/LICENSE.html</loc></url>
-<url><loc>/authors.html</loc></url>
-<url><loc>/index.html</loc></url>
-<url><loc>/reference/friedmanOmni.html</loc></url>
-<url><loc>/reference/friedmanPost.html</loc></url>
-<url><loc>/reference/index.html</loc></url>
-<url><loc>/reference/kruskalOmni.html</loc></url>
-<url><loc>/reference/kruskalPost.html</loc></url>
-<url><loc>/reference/pipe.html</loc></url>
-<url><loc>/reference/rmOmni.html</loc></url>
-<url><loc>/reference/rmPost.html</loc></url>
-<url><loc>/reference/welchOmni.html</loc></url>
-<url><loc>/reference/welchPost.html</loc></url>
+<url><loc>https://tsuda16k.github.io/sistatica/404.html</loc></url>
+<url><loc>https://tsuda16k.github.io/sistatica/LICENSE-text.html</loc></url>
+<url><loc>https://tsuda16k.github.io/sistatica/LICENSE.html</loc></url>
+<url><loc>https://tsuda16k.github.io/sistatica/articles/analysis-anova.html</loc></url>
+<url><loc>https://tsuda16k.github.io/sistatica/articles/index.html</loc></url>
+<url><loc>https://tsuda16k.github.io/sistatica/authors.html</loc></url>
+<url><loc>https://tsuda16k.github.io/sistatica/index.html</loc></url>
+<url><loc>https://tsuda16k.github.io/sistatica/reference/friedmanOmni.html</loc></url>
+<url><loc>https://tsuda16k.github.io/sistatica/reference/friedmanPost.html</loc></url>
+<url><loc>https://tsuda16k.github.io/sistatica/reference/index.html</loc></url>
+<url><loc>https://tsuda16k.github.io/sistatica/reference/kruskalOmni.html</loc></url>
+<url><loc>https://tsuda16k.github.io/sistatica/reference/kruskalPost.html</loc></url>
+<url><loc>https://tsuda16k.github.io/sistatica/reference/pipe.html</loc></url>
+<url><loc>https://tsuda16k.github.io/sistatica/reference/rmOmni.html</loc></url>
+<url><loc>https://tsuda16k.github.io/sistatica/reference/rmPost.html</loc></url>
+<url><loc>https://tsuda16k.github.io/sistatica/reference/welchOmni.html</loc></url>
+<url><loc>https://tsuda16k.github.io/sistatica/reference/welchPost.html</loc></url>
 </urlset>
 
