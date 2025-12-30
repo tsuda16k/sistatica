@@ -9,3 +9,4 @@ docs/
 Thumbs.db
 ^cran-comments.md$
 docs
+inst/doc

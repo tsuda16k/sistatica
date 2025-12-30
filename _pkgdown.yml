@@ -1,4 +1,20 @@
-url: ~
+url: https://tsuda16k.github.io/sistatica/
 template:
   bootstrap: 5
 
+navbar:
+  structure:
+    left:  [home, reference, articles]
+    right: [search, github]
+
+  components:
+    articles:
+      text: 解説記事
+      menu:
+      - text: 分散分析
+        href: articles/analysis-anova.html
+
+    github:
+      icon: fab fa-github fa-lg
+      href: https://github.com/tsuda16k/sistatica
+      aria-label: GitHub
