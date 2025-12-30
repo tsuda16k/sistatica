@@ -3,3 +3,7 @@
 ^LICENSE\.md$
 ^cran-comments.md$
 .DS_Store
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
