@@ -3,7 +3,7 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   analysis-anova: analysis-anova.html
-last_built: 2025-12-30T20:08Z
+last_built: 2025-12-30T20:49Z
 urls:
   reference: https://tsuda16k.github.io/sistatica/reference
   article: https://tsuda16k.github.io/sistatica/articles

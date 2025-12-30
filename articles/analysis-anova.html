@@ -67,14 +67,321 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tsuda16k/sistatica" class="external-link">sistatica</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
-<h2 id="分散分析">分散分析<a class="anchor" aria-label="anchor" href="#%E5%88%86%E6%95%A3%E5%88%86%E6%9E%90"></a>
+<h2 id="このビネットについて">このビネットについて<a class="anchor" aria-label="anchor" href="#%E3%81%93%E3%81%AE%E3%83%93%E3%83%8D%E3%83%83%E3%83%88%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">a</span> <span class="op">=</span> <span class="fl">1</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">a</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 1</span></span></code></pre></div>
+<p>このビネットでは <strong>sistatica</strong>
+の分散分析関連の関数の基本的な使い方を解説します。</p>
+<hr>
 </div>
-  </main>
+<div class="section level2">
+<h2 id="反復測定分散分析rm-anova">反復測定分散分析（rm-ANOVA）<a class="anchor" aria-label="anchor" href="#%E5%8F%8D%E5%BE%A9%E6%B8%AC%E5%AE%9A%E5%88%86%E6%95%A3%E5%88%86%E6%9E%90rm-anova"></a>
+</h2>
+<p>この節では <strong>sistatica</strong>
+を用いて、1要因の反復測定分散分析（repeated-measures
+ANOVA）を実行する方法を解説します。<br>
+基本的には次の2つの関数を使います。</p>
+<ul>
+<li>
+<code><a href="../reference/rmOmni.html">rmOmni()</a></code>：オムニバステスト（条件の主効果）</li>
+<li>
+<code><a href="../reference/rmPost.html">rmPost()</a></code>：事後検定（対応ありのペア比較：paired
+t-test）</li>
+</ul>
+<div class="section level3">
+<h3 id="前提データ形式long形式">前提：データ形式（long形式）<a class="anchor" aria-label="anchor" href="#%E5%89%8D%E6%8F%90%E3%83%87%E3%83%BC%E3%82%BF%E5%BD%A2%E5%BC%8Flong%E5%BD%A2%E5%BC%8F"></a>
+</h3>
+<p><code><a href="../reference/rmOmni.html">rmOmni()</a></code> と <code><a href="../reference/rmPost.html">rmPost()</a></code> は
+<strong>long形式</strong>のデータフレームを想定します。必要な列は次の3つです。</p>
+<ul>
+<li>
+<code>id</code>：被験者ID（同一被験者を識別できる列）</li>
+<li>
+<code>group</code>：条件（within-subject factor）</li>
+<li>
+<code>y</code>：従属変数（数値）</li>
+</ul>
+<p>このビネットでは、まずワイド形式で疑似データを作成し、long形式に変換して解析します。</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tsuda16k/sistatica" class="external-link">sistatica</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">n</span> <span class="op">=</span> <span class="fl">24</span></span>
+<span><span class="va">u</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">4</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">w</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  A <span class="op">=</span> <span class="fl">50</span> <span class="op">+</span> <span class="va">u</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>,</span>
+<span>  B <span class="op">=</span> <span class="fl">55</span> <span class="op">+</span> <span class="va">u</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>,</span>
+<span>  C <span class="op">=</span> <span class="fl">60</span> <span class="op">+</span> <span class="va">u</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dat</span> <span class="op">=</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="va">w</span>, cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">A</span>, <span class="va">B</span>, <span class="va">C</span><span class="op">)</span>, names_to <span class="op">=</span> <span class="st">"group"</span>, values_to <span class="op">=</span> <span class="st">"y"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="オムニバステストrmomni">1) オムニバステスト：<code>rmOmni()</code><a class="anchor" aria-label="anchor" href="#%E3%82%AA%E3%83%A0%E3%83%8B%E3%83%90%E3%82%B9%E3%83%86%E3%82%B9%E3%83%88rmomni"></a>
+</h2>
+<p><code><a href="../reference/rmOmni.html">rmOmni()</a></code> は、1要因の反復測定分散分析（rm-ANOVA）の
+<strong>オムニバステスト（条件の主効果）</strong> を実行します。<br>
+結果は「手法間で共通化された列名」を持つ <strong>1行の tibble</strong>
+として返されます。</p>
+<div class="section level3">
+<h3 id="実行例">実行例<a class="anchor" aria-label="anchor" href="#%E5%AE%9F%E8%A1%8C%E4%BE%8B"></a>
+</h3>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">omni</span> <span class="op">=</span> <span class="fu"><a href="../reference/rmOmni.html">rmOmni</a></span><span class="op">(</span><span class="va">dat</span>, id <span class="op">=</span> <span class="st">"id"</span>, group <span class="op">=</span> <span class="st">"group"</span>, y <span class="op">=</span> <span class="st">"y"</span>, correction <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span></code></pre></div>
+<p>球面性補正を常に Greenhouse–Geisser（GG）にしたい場合は
+<code>correction = "GG"</code> を指定します。</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">omni_gg</span> <span class="op">=</span> <span class="fu"><a href="../reference/rmOmni.html">rmOmni</a></span><span class="op">(</span><span class="va">dat</span>, id <span class="op">=</span> <span class="st">"id"</span>, group <span class="op">=</span> <span class="st">"group"</span>, y <span class="op">=</span> <span class="st">"y"</span>, correction <span class="op">=</span> <span class="st">"GG"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="引数の説明">引数の説明<a class="anchor" aria-label="anchor" href="#%E5%BC%95%E6%95%B0%E3%81%AE%E8%AA%AC%E6%98%8E"></a>
+</h3>
+<ul>
+<li><p><code>df</code><br>
+long形式データフレーム（<code>id</code>・<code>group</code>・<code>y</code>
+を含む）</p></li>
+<li><p><code>id</code>（デフォルト <code>"id"</code>）<br>
+被験者ID列名（文字列）</p></li>
+<li><p><code>group</code>（デフォルト <code>"group"</code>）<br>
+条件列名（文字列、within-subject factor）</p></li>
+<li><p><code>y</code>（デフォルト <code>"y"</code>）<br>
+従属変数列名（文字列、数値）</p></li>
+<li>
+<p><code>correction</code>（デフォルト <code>"auto"</code>）<br>
+球面性補正（sphericity correction）の指定（<code>"auto"</code>,
+<code>"GG"</code>, <code>"HF"</code>, <code>"none"</code>）</p>
+<ul>
+<li>
+<code>"auto"</code>：球面性が破れている場合のみGG補正（推奨のデフォルト運用）</li>
+<li>
+<code>"GG"</code>：常にGreenhouse–Geisser補正（適用可能な場合）</li>
+<li>
+<code>"HF"</code>：常にHuynh–Feldt補正（適用可能な場合）</li>
+<li>
+<code>"none"</code>：補正なし（未補正の自由度・p値）</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="出力omniの列の意味">出力（<code>omni</code>）の列の意味<a class="anchor" aria-label="anchor" href="#%E5%87%BA%E5%8A%9Bomni%E3%81%AE%E5%88%97%E3%81%AE%E6%84%8F%E5%91%B3"></a>
+</h3>
+<p><code><a href="../reference/rmOmni.html">rmOmni()</a></code> の出力は tibble
+で、主に以下の列を含みます。</p>
+<ul>
+<li>
+<code>analysis_method</code>：手法識別子（<code>"repeated_measures_anova"</code>）</li>
+<li>
+<code>effect_term</code>：効果の名前（スキーマ統一のため常に
+<code>"group"</code>）</li>
+<li>
+<code>test_statistic</code>：検定統計量（F値）</li>
+<li>
+<code>test_statistic_type</code>：統計量の種類（常に
+<code>"F"</code>）</li>
+<li>
+<code>df1</code>：自由度（分子、補正される場合あり）</li>
+<li>
+<code>df2</code>：自由度（分母、補正される場合あり）</li>
+<li>
+<code>p_value</code>：p値（補正される場合あり）</li>
+<li>
+<code>effect_size</code>：効果量（一般化η²：GES）</li>
+<li>
+<code>effect_size_type</code>：効果量の種類（<code>"generalized_eta_squared"</code>）</li>
+<li>
+<code>effect_size_scale</code>：効果量のスケール（<code>"variance_explained"</code>）</li>
+<li>
+<code>effect_size_ci_low</code>,
+<code>effect_size_ci_high</code>：効果量CI（現状は予約列で
+<code>NA</code>）</li>
+</ul>
+<hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="事後検定rmpost">2) 事後検定：<code>rmPost()</code><a class="anchor" aria-label="anchor" href="#%E4%BA%8B%E5%BE%8C%E6%A4%9C%E5%AE%9Armpost"></a>
+</h2>
+<p><code><a href="../reference/rmPost.html">rmPost()</a></code> は、条件間のペア比較（対応ありの t
+検定）を実行し、<br><strong>多重比較補正後 p
+値</strong>、<strong>差の推定量と信頼区間</strong>、<strong>効果量</strong>、さらに
+<strong>条件ごとの平均・SD・サンプルサイズ</strong>
+など、論文報告に有用な列をまとめて返します。</p>
+<div class="section level3">
+<h3 id="実行例p値holm補正ci調整なし">実行例（p値：Holm補正、CI：調整なし）<a class="anchor" aria-label="anchor" href="#%E5%AE%9F%E8%A1%8C%E4%BE%8Bp%E5%80%A4holm%E8%A3%9C%E6%AD%A3ci%E8%AA%BF%E6%95%B4%E3%81%AA%E3%81%97"></a>
+</h3>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">post</span> <span class="op">=</span> <span class="fu"><a href="../reference/rmPost.html">rmPost</a></span><span class="op">(</span></span>
+<span>  <span class="va">dat</span>,</span>
+<span>  id <span class="op">=</span> <span class="st">"id"</span>, group <span class="op">=</span> <span class="st">"group"</span>, y <span class="op">=</span> <span class="st">"y"</span>,</span>
+<span>  pAdjust <span class="op">=</span> <span class="st">"holm"</span>,</span>
+<span>  ciAdjust <span class="op">=</span> <span class="st">"none"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="実行例p値holm補正cibonferroni調整">実行例（p値：Holm補正、CI：Bonferroni調整）<a class="anchor" aria-label="anchor" href="#%E5%AE%9F%E8%A1%8C%E4%BE%8Bp%E5%80%A4holm%E8%A3%9C%E6%AD%A3cibonferroni%E8%AA%BF%E6%95%B4"></a>
+</h3>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">post_bonf_ci</span> <span class="op">=</span> <span class="fu"><a href="../reference/rmPost.html">rmPost</a></span><span class="op">(</span></span>
+<span>  <span class="va">dat</span>,</span>
+<span>  id <span class="op">=</span> <span class="st">"id"</span>, group <span class="op">=</span> <span class="st">"group"</span>, y <span class="op">=</span> <span class="st">"y"</span>,</span>
+<span>  pAdjust <span class="op">=</span> <span class="st">"holm"</span>,</span>
+<span>  ciAdjust <span class="op">=</span> <span class="st">"bonferroni"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="引数の説明-1">引数の説明<a class="anchor" aria-label="anchor" href="#%E5%BC%95%E6%95%B0%E3%81%AE%E8%AA%AC%E6%98%8E-1"></a>
+</h3>
+<ul>
+<li><p><code>df</code><br>
+long形式データフレーム（<code>id</code>・<code>group</code>・<code>y</code>
+を含む）</p></li>
+<li><p><code>id</code>（デフォルト <code>"id"</code>）<br>
+被験者ID列名（文字列）</p></li>
+<li><p><code>group</code>（デフォルト <code>"group"</code>）<br>
+条件列名（文字列、within-subject factor）</p></li>
+<li><p><code>y</code>（デフォルト <code>"y"</code>）<br>
+従属変数列名（文字列、数値）</p></li>
+<li><p><code>alpha</code>（デフォルト <code>0.05</code>）<br>
+ファミリー水準の有意水準（CI調整に用いる）</p></li>
+<li><p><code>pAdjust</code>（デフォルト <code>"holm"</code>）<br>
+p値の多重比較補正法。<code><a href="https://rdrr.io/r/stats/p.adjust.html" class="external-link">stats::p.adjust()</a></code>
+が受け付ける文字列（例：<code>"holm"</code>, <code>"bonferroni"</code>,
+<code>"BH"</code> など）</p></li>
+<li><p><code>ciAdjust</code>（<code>"none"</code> または
+<code>"bonferroni"</code>）<br>
+信頼区間の調整法。<code>"bonferroni"</code> の場合、比較数に基づいて CI
+の信頼水準を調整します。</p></li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="出力postの列の意味要点">出力（<code>post</code>）の列の意味（要点）<a class="anchor" aria-label="anchor" href="#%E5%87%BA%E5%8A%9Bpost%E3%81%AE%E5%88%97%E3%81%AE%E6%84%8F%E5%91%B3%E8%A6%81%E7%82%B9"></a>
+</h3>
+<p><code><a href="../reference/rmPost.html">rmPost()</a></code> は <strong>ペア比較ごとに1行</strong>の tibble
+を返します。主な列は以下です。</p>
+<div class="section level4">
+<h4 id="比較の識別">比較の識別<a class="anchor" aria-label="anchor" href="#%E6%AF%94%E8%BC%83%E3%81%AE%E8%AD%98%E5%88%A5"></a>
+</h4>
+<ul>
+<li>
+<code>analysis_method</code>：手法識別子（<code>"repeated_measures_anova"</code>）</li>
+<li>
+<code>effect_term</code>：効果の名前（常に
+<code>"group"</code>）</li>
+<li>
+<code>comparison_kind</code>：比較の種類（常に
+<code>"pairwise"</code>）</li>
+<li>
+<code>contrast_label</code>：表示用ラベル（例：<code>"A vs B"</code>）</li>
+<li>
+<code>contrast_id</code>：機械可読なID（例：<code>"group:A|B"</code>）</li>
+<li>
+<code>group1</code>, <code>group2</code>：比較する条件名</li>
+</ul>
+</div>
+<div class="section level4">
+<h4 id="条件ごとの記述統計報告向け">条件ごとの記述統計（報告向け）<a class="anchor" aria-label="anchor" href="#%E6%9D%A1%E4%BB%B6%E3%81%94%E3%81%A8%E3%81%AE%E8%A8%98%E8%BF%B0%E7%B5%B1%E8%A8%88%E5%A0%B1%E5%91%8A%E5%90%91%E3%81%91"></a>
+</h4>
+<ul>
+<li>
+<code>center_type</code>：代表値の種類（常に
+<code>"mean"</code>）</li>
+<li>
+<code>group1_center</code>,
+<code>group2_center</code>：各条件の平均</li>
+<li>
+<code>dispersion_type</code>：ばらつきの種類（常に
+<code>"sd"</code>）</li>
+<li>
+<code>group1_dispersion</code>,
+<code>group2_dispersion</code>：各条件の標準偏差</li>
+<li>
+<code>n_group1</code>,
+<code>n_group2</code>：各条件の有効サンプルサイズ</li>
+<li>
+<code>n_total</code>：その比較で利用できた「ペア」の数（欠測があると減る可能性あり）</li>
+</ul>
+</div>
+<div class="section level4">
+<h4 id="差の推定信頼区間">差の推定・信頼区間<a class="anchor" aria-label="anchor" href="#%E5%B7%AE%E3%81%AE%E6%8E%A8%E5%AE%9A%E4%BF%A1%E9%A0%BC%E5%8C%BA%E9%96%93"></a>
+</h4>
+<ul>
+<li>
+<code>difference_estimate</code>：平均との差（<code>group1 - group2</code>）</li>
+<li>
+<code>ci_low</code>, <code>ci_high</code>：差の信頼区間</li>
+<li>
+<code>ci_level</code>：信頼水準（<code>ciAdjust = "bonferroni"</code>
+の場合は調整後）</li>
+<li>
+<code>ci_adjustment</code>：CI調整の有無（<code>"unadjusted"</code>
+/ <code>"bonferroni_adjusted"</code>）</li>
+</ul>
+</div>
+<div class="section level4">
+<h4 id="検定結果t検定">検定結果（t検定）<a class="anchor" aria-label="anchor" href="#%E6%A4%9C%E5%AE%9A%E7%B5%90%E6%9E%9Ct%E6%A4%9C%E5%AE%9A"></a>
+</h4>
+<ul>
+<li>
+<code>test_statistic</code>：t値</li>
+<li>
+<code>df1</code>：自由度</li>
+<li>
+<code>p_value</code>：未補正p値</li>
+<li>
+<code>p_value_adjusted</code>：多重比較補正後p値</li>
+<li>
+<code>p_value_adjustment</code>：補正法ラベル（例：<code>"holm_adjusted"</code>）</li>
+</ul>
+</div>
+<div class="section level4">
+<h4 id="効果量">効果量<a class="anchor" aria-label="anchor" href="#%E5%8A%B9%E6%9E%9C%E9%87%8F"></a>
+</h4>
+<ul>
+<li>
+<code>effect_size</code>：効果量（Cohen’s
+dz：対応ありの標準化平均差）</li>
+<li>
+<code>effect_size_type</code>：効果量の種類（<code>"cohens_dz"</code>）</li>
+<li>
+<code>effect_size_scale</code>：スケール（<code>"standardized_mean_difference"</code>）</li>
+<li>
+<code>effect_size_ci_low</code>,
+<code>effect_size_ci_high</code>：効果量CI（現状は予約列で
+<code>NA</code>）</li>
+</ul>
+<hr>
+</div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="レポート表作成に便利な抜き出し例">レポート（表）作成に便利な抜き出し例<a class="anchor" aria-label="anchor" href="#%E3%83%AC%E3%83%9D%E3%83%BC%E3%83%88%E8%A1%A8%E4%BD%9C%E6%88%90%E3%81%AB%E4%BE%BF%E5%88%A9%E3%81%AA%E6%8A%9C%E3%81%8D%E5%87%BA%E3%81%97%E4%BE%8B"></a>
+</h2>
+<div class="section level3">
+<h3 id="オムニバステストrm-anova">オムニバステスト（rm-ANOVA）<a class="anchor" aria-label="anchor" href="#%E3%82%AA%E3%83%A0%E3%83%8B%E3%83%90%E3%82%B9%E3%83%86%E3%82%B9%E3%83%88rm-anova"></a>
+</h3>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">omni</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>    <span class="va">effect_term</span>,</span>
+<span>    <span class="va">test_statistic</span>, <span class="va">df1</span>, <span class="va">df2</span>, <span class="va">p_value</span>,</span>
+<span>    <span class="va">effect_size</span>, <span class="va">effect_size_type</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 7</span></span></span>
+<span><span class="co">#&gt;   effect_term test_statistic   df1   df2  p_value effect_size effect_size_type  </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> group                 37.2     2    46 2.41<span style="color: #949494;">e</span><span style="color: #BB0000;">-10</span>       0.363 generalized_eta_s…</span></span></code></pre></div>
+</div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
