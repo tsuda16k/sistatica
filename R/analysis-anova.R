@@ -15,6 +15,8 @@ summarize_column <- function(data, col) {
     stop("error")
   }
 
+  data = data %>% as.data.frame()
+
   x <- data[[col]]
 
   list(
