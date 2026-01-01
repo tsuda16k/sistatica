@@ -13,7 +13,7 @@ friedman_posthoc(
   p_adjust_method = "holm",
   ci_adjust_method = c("bonferroni", "none", "sidak"),
   missing = c("pairwise", "complete_case"),
-  duplicate = c("error", "mean", "median", "first"),
+  duplicate = c("mean", "median", "first", "error"),
   duplicate_na_rm = TRUE
 )
 }
@@ -34,7 +34,7 @@ friedman_posthoc(
 
 \item{missing}{Missing-data strategy: \code{"pairwise"} (default) or \code{"complete_case"}.}
 
-\item{duplicate}{How to handle duplicated ID x within cells: \code{"error"} (default), \code{"mean"}, \code{"median"}, \code{"first"}.}
+\item{duplicate}{How to handle duplicated ID x within cells: \code{"mean"} (default), \code{"median"}, \code{"first"}, \code{"error"}.}
 
 \item{duplicate_na_rm}{Logical; if TRUE, removes NAs within duplicated cells before aggregation (default: TRUE).}
 }

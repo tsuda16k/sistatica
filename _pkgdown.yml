@@ -11,7 +11,7 @@ navbar:
     articles:
       text: 解説記事
       menu:
-      - text: 分散分析
+      - text: 1要因分散分析
         href: articles/analysis-anova.html
 
     github:

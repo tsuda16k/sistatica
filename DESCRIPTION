@@ -1,6 +1,6 @@
 Package: sistatica
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Convenient Tools for Tidy Statistical Analysis
 Version: 0.2.0
 Authors@R: c(
     person(
@@ -9,8 +9,11 @@ Authors@R: c(
       role = c("aut", "cre")
     )
   )
-Description: This package has usuful functions for data analysis.
-    Continuation lines should be indented.
+Description: This package provides convenience functions for statistical analysis workflows with tidy
+    (data.frame/tibble) outputs. It currently focuses on one-way omnibus tests and post-hoc pairwise
+    comparisons, including effect sizes, confidence intervals (optionally adjusted), and
+    multiple-comparison p-value adjustments, and will be extended to additional methods in future
+    versions.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -30,6 +33,6 @@ Suggests:
     rmarkdown,
     stringr
 Config/testthat/edition: 3
-URL: https://github.com/tsuda16k/sistatica
+URL: https://tsuda16k.github.io/sistatica/, https://github.com/tsuda16k/sistatica
 BugReports: https://github.com/tsuda16k/sistatica/issues
 VignetteBuilder: knitr

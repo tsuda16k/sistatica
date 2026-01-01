@@ -140,7 +140,7 @@
 # For within-subject posthoc: build wide matrix for a subset (two levels or all levels),
 # optionally aggregating duplicated ID-within cells.
 .build_wide_mat = function(dat, id_nm, within_nm, dv_nm,
-                           duplicate = c("error", "mean", "first", "median"),
+                           duplicate = c("mean", "first", "median", "error"),
                            duplicate_na_rm = TRUE) {
   duplicate = match.arg(duplicate)
 
@@ -698,7 +698,7 @@ kruskal_omnibus = function(data, dv, group, missing = c("pairwise", "complete_ca
 #' @param p_adjust_method P-value adjustment method passed to \code{rstatix} (default: \code{"holm"}).
 #' @param ci_adjust_method CI multiplicity adjustment method (default: \code{"bonferroni"}).
 #' @param missing Missing-data strategy: \code{"pairwise"} (default) or \code{"complete_case"}.
-#' @param duplicate How to handle duplicated ID x within cells: \code{"error"} (default), \code{"mean"}, \code{"median"}, \code{"first"}.
+#' @param duplicate How to handle duplicated ID x within cells: \code{"mean"} (default), \code{"median"}, \code{"first"}, \code{"error"}.
 #' @param duplicate_na_rm Logical; if TRUE, removes NAs within duplicated cells before aggregation (default: TRUE).
 #'
 #' @return
@@ -748,7 +748,7 @@ rm_posthoc = function(
     p_adjust_method = "holm",
     ci_adjust_method = c("bonferroni", "none", "sidak"),
     missing = c("pairwise", "complete_case"),
-    duplicate = c("error", "mean", "median", "first"),
+    duplicate = c("mean", "median", "first", "error"),
     duplicate_na_rm = TRUE
 ) {
   missing = match.arg(missing)
@@ -1107,7 +1107,7 @@ welch_posthoc = function(
 #' @param p_adjust_method P-value adjustment method passed to \code{rstatix} (default: \code{"holm"}).
 #' @param ci_adjust_method CI multiplicity adjustment method (default: \code{"bonferroni"}).
 #' @param missing Missing-data strategy: \code{"pairwise"} (default) or \code{"complete_case"}.
-#' @param duplicate How to handle duplicated ID x within cells: \code{"error"} (default), \code{"mean"}, \code{"median"}, \code{"first"}.
+#' @param duplicate How to handle duplicated ID x within cells: \code{"mean"} (default), \code{"median"}, \code{"first"}, \code{"error"}.
 #' @param duplicate_na_rm Logical; if TRUE, removes NAs within duplicated cells before aggregation (default: TRUE).
 #'
 #' @return
@@ -1161,7 +1161,7 @@ friedman_posthoc = function(
     p_adjust_method = "holm",
     ci_adjust_method = c("bonferroni", "none", "sidak"),
     missing = c("pairwise", "complete_case"),
-    duplicate = c("error", "mean", "median", "first"),
+    duplicate = c("mean", "median", "first", "error"),
     duplicate_na_rm = TRUE
 ) {
   missing = match.arg(missing)
