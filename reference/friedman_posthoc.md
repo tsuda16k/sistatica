@@ -18,7 +18,7 @@ friedman_posthoc(
   p_adjust_method = "holm",
   ci_adjust_method = c("bonferroni", "none", "sidak"),
   missing = c("pairwise", "complete_case"),
-  duplicate = c("error", "mean", "median", "first"),
+  duplicate = c("mean", "median", "first", "error"),
   duplicate_na_rm = TRUE
 )
 ```
@@ -59,8 +59,8 @@ friedman_posthoc(
 
 - duplicate:
 
-  How to handle duplicated ID x within cells: `"error"` (default),
-  `"mean"`, `"median"`, `"first"`.
+  How to handle duplicated ID x within cells: `"mean"` (default),
+  `"median"`, `"first"`, `"error"`.
 
 - duplicate_na_rm:
 

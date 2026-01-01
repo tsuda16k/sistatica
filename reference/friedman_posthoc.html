@@ -22,7 +22,7 @@ Also computes rank-biserial correlation (paired) with unadjusted and adjusted CI
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown--" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">解説記事</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown--"><li><a class="dropdown-item" href="../articles/analysis-anova.html">分散分析</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown--"><li><a class="dropdown-item" href="../articles/analysis-anova.html">1要因分散分析</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -57,7 +57,7 @@ Also computes rank-biserial correlation (paired) with unadjusted and adjusted CI
 <span>  p_adjust_method <span class="op">=</span> <span class="st">"holm"</span>,</span>
 <span>  ci_adjust_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bonferroni"</span>, <span class="st">"none"</span>, <span class="st">"sidak"</span><span class="op">)</span>,</span>
 <span>  missing <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pairwise"</span>, <span class="st">"complete_case"</span><span class="op">)</span>,</span>
-<span>  duplicate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"error"</span>, <span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"first"</span><span class="op">)</span>,</span>
+<span>  duplicate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"first"</span>, <span class="st">"error"</span><span class="op">)</span>,</span>
 <span>  duplicate_na_rm <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -99,7 +99,7 @@ Also computes rank-biserial correlation (paired) with unadjusted and adjusted CI
 
 
 <dt id="arg-duplicate">duplicate<a class="anchor" aria-label="anchor" href="#arg-duplicate"></a></dt>
-<dd><p>How to handle duplicated ID x within cells: <code>"error"</code> (default), <code>"mean"</code>, <code>"median"</code>, <code>"first"</code>.</p></dd>
+<dd><p>How to handle duplicated ID x within cells: <code>"mean"</code> (default), <code>"median"</code>, <code>"first"</code>, <code>"error"</code>.</p></dd>
 
 
 <dt id="arg-duplicate-na-rm">duplicate_na_rm<a class="anchor" aria-label="anchor" href="#arg-duplicate-na-rm"></a></dt>
