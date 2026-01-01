@@ -2,9 +2,6 @@
 
 統計分析用のさまざまな関数を提供するパッケージです。
 
-リファレンスページはこちら。  
-<https://tsuda16k.github.io/sistatica/>
-
 ## インストール方法
 
 以下の手順でインストールできます。
@@ -17,9 +14,8 @@ pak::pak("tsuda16k/sistatica")
 
 ## 使い方
 
-This is a basic example which shows you how to solve a common problem:
+リファレンスページはこちら。  
+<https://tsuda16k.github.io/sistatica/>
 
-``` r
-library(sistatica)
-## basic example code
-```
+1要因分散分析
+<https://tsuda16k.github.io/sistatica/articles/analysis-anova.html>
