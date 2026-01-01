@@ -10,7 +10,8 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="sistatica: 4種類の一要因デザインに対するオムニバス検定と事後検定">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<meta property="og:title" content="sistatica: 4種類の一要因デザインに対するオムニバス検定と事後検定">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -67,10 +68,11 @@
 <div class="section level2">
 <h2 id="イントロダクション">0. イントロダクション<a class="anchor" aria-label="anchor" href="#%E3%82%A4%E3%83%B3%E3%83%88%E3%83%AD%E3%83%80%E3%82%AF%E3%82%B7%E3%83%A7%E3%83%B3"></a>
 </h2>
-<p>このビネットは、<strong>sistatica</strong> パッケージで提供される 4
-種類の一要因デザインについて、<strong>オムニバス検定</strong>と<strong>事後検定（ペア比較）</strong>を実行する際の、パッケージ固有の仕様・引数・出力の読み方をまとめます。</p>
+<p>このページでは、<strong>sistatica</strong>
+パッケージを用いて1要因の分散分析を行う方法を説明します。</p>
+<p>4種類の1要因分散分析デザインごとに、<strong>オムニバス検定</strong>と<strong>事後検定（ペア比較）</strong>を行う関数が用意されています。</p>
 <div class="section level3">
-<h3 id="関数一覧">0.1 関数一覧<a class="anchor" aria-label="anchor" href="#%E9%96%A2%E6%95%B0%E4%B8%80%E8%A6%A7"></a>
+<h3 id="関数一覧">関数一覧<a class="anchor" aria-label="anchor" href="#%E9%96%A2%E6%95%B0%E4%B8%80%E8%A6%A7"></a>
 </h3>
 <table class="table">
 <colgroup>
@@ -112,7 +114,7 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="入力データ形式ロング形式">0.2 入力データ形式（ロング形式）<a class="anchor" aria-label="anchor" href="#%E5%85%A5%E5%8A%9B%E3%83%87%E3%83%BC%E3%82%BF%E5%BD%A2%E5%BC%8F%E3%83%AD%E3%83%B3%E3%82%B0%E5%BD%A2%E5%BC%8F"></a>
+<h3 id="入力データ形式ロング形式">入力データ形式（ロング形式）<a class="anchor" aria-label="anchor" href="#%E5%85%A5%E5%8A%9B%E3%83%87%E3%83%BC%E3%82%BF%E5%BD%A2%E5%BC%8F%E3%83%AD%E3%83%B3%E3%82%B0%E5%BD%A2%E5%BC%8F"></a>
 </h3>
 <p>本パッケージは、全て
 <strong>ロング形式</strong>のデータを前提とします。</p>
@@ -124,10 +126,9 @@
 </ul>
 </div>
 <div class="section level3">
-<h3 id="有意表示p_adj_mark">0.3 “有意”表示（<code>p_adj_mark</code>）<a class="anchor" aria-label="anchor" href="#%E6%9C%89%E6%84%8F%E8%A1%A8%E7%A4%BAp_adj_mark"></a>
+<h3 id="有意表示記号">“有意”表示記号<a class="anchor" aria-label="anchor" href="#%E6%9C%89%E6%84%8F%E8%A1%A8%E7%A4%BA%E8%A8%98%E5%8F%B7"></a>
 </h3>
-<p>事後検定の返り値には、視覚的な便宜のために <code>p_adj_mark</code>
-列が含まれます。</p>
+<p>事後検定の返り値には <code>p_adj_mark</code> 列が含まれます。</p>
 <ul>
 <li>
 <code>p_adj &lt; 0.05</code> のとき <code>"*"</code>
@@ -138,9 +139,10 @@
 <p>※ 有意水準 0.05 は固定仕様です。</p>
 </div>
 <div class="section level3">
-<h3 id="p値補正とci補正の扱い独立">0.4 p値補正とCI補正の扱い（独立）<a class="anchor" aria-label="anchor" href="#p%E5%80%A4%E8%A3%9C%E6%AD%A3%E3%81%A8ci%E8%A3%9C%E6%AD%A3%E3%81%AE%E6%89%B1%E3%81%84%E7%8B%AC%E7%AB%8B"></a>
+<h3 id="p値補正とci補正の扱い">p値補正とCI補正の扱い<a class="anchor" aria-label="anchor" href="#p%E5%80%A4%E8%A3%9C%E6%AD%A3%E3%81%A8ci%E8%A3%9C%E6%AD%A3%E3%81%AE%E6%89%B1%E3%81%84"></a>
 </h3>
-<p>事後検定では、p値補正と効果量CI補正は <strong>独立</strong>です。</p>
+<p>事後検定では、p値補正と効果量CI補正は
+<strong>独立</strong>して指定します。</p>
 <ul>
 <li>p値補正: <code>p_adjust_method</code>（推奨例:
 <code>"holm"</code>）</li>
@@ -160,10 +162,10 @@
 <strong>その関数が返すペア数（比較数）</strong>に基づいて行われます。</p>
 </div>
 <div class="section level3">
-<h3 id="欠損の扱いmissing">0.5 欠損の扱い（<code>missing</code>）<a class="anchor" aria-label="anchor" href="#%E6%AC%A0%E6%90%8D%E3%81%AE%E6%89%B1%E3%81%84missing"></a>
+<h3 id="欠損の扱いmissing-引数">欠損の扱い（<code>missing</code> 引数）<a class="anchor" aria-label="anchor" href="#%E6%AC%A0%E6%90%8D%E3%81%AE%E6%89%B1%E3%81%84missing-%E5%BC%95%E6%95%B0"></a>
 </h3>
-<p><code>missing</code> は <code>"pairwise"</code>（デフォルト）と
-<code>"complete_case"</code> を持ちます。</p>
+<p><code>missing</code> 引数は <code>"pairwise"</code>（デフォルト）と
+<code>"complete_case"</code> から選びます。</p>
 <ul>
 <li>反復測定 / Friedman（対応あり）
 <ul>
@@ -184,7 +186,7 @@
 </ul>
 </div>
 <div class="section level3">
-<h3 id="重複セルidwithinの扱い対応ありの事後検定">0.6 重複セル（ID×within）の扱い（対応ありの事後検定）<a class="anchor" aria-label="anchor" href="#%E9%87%8D%E8%A4%87%E3%82%BB%E3%83%ABidwithin%E3%81%AE%E6%89%B1%E3%81%84%E5%AF%BE%E5%BF%9C%E3%81%82%E3%82%8A%E3%81%AE%E4%BA%8B%E5%BE%8C%E6%A4%9C%E5%AE%9A"></a>
+<h3 id="重複セルidwithinの扱い対応ありの事後検定を行う場合">重複セル（ID×within）の扱い（「対応あり」の事後検定を行う場合）<a class="anchor" aria-label="anchor" href="#%E9%87%8D%E8%A4%87%E3%82%BB%E3%83%ABidwithin%E3%81%AE%E6%89%B1%E3%81%84%E5%AF%BE%E5%BF%9C%E3%81%82%E3%82%8A%E3%81%AE%E4%BA%8B%E5%BE%8C%E6%A4%9C%E5%AE%9A%E3%82%92%E8%A1%8C%E3%81%86%E5%A0%B4%E5%90%88"></a>
 </h3>
 <p>対応あり（<code><a href="../reference/rm_posthoc.html">rm_posthoc()</a></code>,
 <code><a href="../reference/friedman_posthoc.html">friedman_posthoc()</a></code>）では、<code>id × within</code>
@@ -207,7 +209,7 @@
 </div>
 </div>
 <div class="section level2">
-<h2 id="パラメトリック対応あり反復測定分散分析">1. パラメトリック・対応あり（反復測定分散分析）<a class="anchor" aria-label="anchor" href="#%E3%83%91%E3%83%A9%E3%83%A1%E3%83%88%E3%83%AA%E3%83%83%E3%82%AF%E5%AF%BE%E5%BF%9C%E3%81%82%E3%82%8A%E5%8F%8D%E5%BE%A9%E6%B8%AC%E5%AE%9A%E5%88%86%E6%95%A3%E5%88%86%E6%9E%90"></a>
+<h2 id="パラメトリック対応あり反復測定分散分析">1. パラメトリック・対応あり：反復測定分散分析<a class="anchor" aria-label="anchor" href="#%E3%83%91%E3%83%A9%E3%83%A1%E3%83%88%E3%83%AA%E3%83%83%E3%82%AF%E5%AF%BE%E5%BF%9C%E3%81%82%E3%82%8A%E5%8F%8D%E5%BE%A9%E6%B8%AC%E5%AE%9A%E5%88%86%E6%95%A3%E5%88%86%E6%9E%90"></a>
 </h2>
 <div class="section level3">
 <h3 id="この手法での採用方法本パッケージの設計">1.1 この手法での採用方法（本パッケージの設計）<a class="anchor" aria-label="anchor" href="#%E3%81%93%E3%81%AE%E6%89%8B%E6%B3%95%E3%81%A7%E3%81%AE%E6%8E%A1%E7%94%A8%E6%96%B9%E6%B3%95%E6%9C%AC%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E3%81%AE%E8%A8%AD%E8%A8%88"></a>
@@ -232,7 +234,7 @@ measures）</strong>
 </ul>
 </div>
 <div class="section level3">
-<h3 id="データロング形式の既存データセット">1.2 データ（ロング形式の既存データセット）<a class="anchor" aria-label="anchor" href="#%E3%83%87%E3%83%BC%E3%82%BF%E3%83%AD%E3%83%B3%E3%82%B0%E5%BD%A2%E5%BC%8F%E3%81%AE%E6%97%A2%E5%AD%98%E3%83%87%E3%83%BC%E3%82%BF%E3%82%BB%E3%83%83%E3%83%88"></a>
+<h3 id="データ">1.2 データ<a class="anchor" aria-label="anchor" href="#%E3%83%87%E3%83%BC%E3%82%BF"></a>
 </h3>
 <p>ここでは <code><a href="https://rdrr.io/r/datasets/zCO2.html" class="external-link">datasets::CO2</a></code>
 を用います（ロング形式、<code>Plant</code> がID、<code>conc</code> が
@@ -249,7 +251,7 @@ within）。</p>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Plant</span>, <span class="va">conc</span>, <span class="va">uptake</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="オムニバスrm_anova_omnibus">1.3 オムニバス（<code>rm_anova_omnibus()</code>）<a class="anchor" aria-label="anchor" href="#%E3%82%AA%E3%83%A0%E3%83%8B%E3%83%90%E3%82%B9rm_anova_omnibus"></a>
+<h3 id="オムニバス検定rm_anova_omnibus">1.3 オムニバス検定：<code>rm_anova_omnibus()</code><a class="anchor" aria-label="anchor" href="#%E3%82%AA%E3%83%A0%E3%83%8B%E3%83%90%E3%82%B9%E6%A4%9C%E5%AE%9Arm_anova_omnibus"></a>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rm_omni</span> <span class="op">=</span> <span class="fu"><a href="../reference/rm_anova_omnibus.html">rm_anova_omnibus</a></span><span class="op">(</span></span>
@@ -274,13 +276,16 @@ GES</li>
 <code>missing</code>, <code>n_obs</code>, <code>n_id</code>
 はデータ処理の要約</li>
 </ul>
-<p>（確認用の操作例：本ビネットでは実行しません）</p>
+</div>
+<div class="section level4">
+<h4 id="結果データ内の主要情報の表示">結果データ内の主要情報の表示<a class="anchor" aria-label="anchor" href="#%E7%B5%90%E6%9E%9C%E3%83%87%E3%83%BC%E3%82%BF%E5%86%85%E3%81%AE%E4%B8%BB%E8%A6%81%E6%83%85%E5%A0%B1%E3%81%AE%E8%A1%A8%E7%A4%BA"></a>
+</h4>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rm_omni</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">term</span>, <span class="va">statistic</span>, <span class="va">df1</span>, <span class="va">df2</span>, <span class="va">p</span>, <span class="va">effect_size</span>, <span class="va">effect_size_type</span>, <span class="va">n_id</span>, <span class="va">missing</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
-<h3 id="事後rm_posthoc">1.4 事後（<code>rm_posthoc()</code>）<a class="anchor" aria-label="anchor" href="#%E4%BA%8B%E5%BE%8Crm_posthoc"></a>
+<h3 id="事後検定rm_posthoc">1.4 事後検定：<code>rm_posthoc()</code><a class="anchor" aria-label="anchor" href="#%E4%BA%8B%E5%BE%8C%E6%A4%9C%E5%AE%9Arm_posthoc"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rm_post</span> <span class="op">=</span> <span class="fu"><a href="../reference/rm_posthoc.html">rm_posthoc</a></span><span class="op">(</span></span>
@@ -318,7 +323,10 @@ GES</li>
 <li>
 <code>n_pair</code> はそのペアで効果量・CIに使えた対応データ数</li>
 </ul>
-<p>（確認用の操作例：本ビネットでは実行しません）</p>
+</div>
+<div class="section level4">
+<h4 id="結果データ内の主要情報の表示-1">結果データ内の主要情報の表示<a class="anchor" aria-label="anchor" href="#%E7%B5%90%E6%9E%9C%E3%83%87%E3%83%BC%E3%82%BF%E5%86%85%E3%81%AE%E4%B8%BB%E8%A6%81%E6%83%85%E5%A0%B1%E3%81%AE%E8%A1%A8%E7%A4%BA-1"></a>
+</h4>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rm_post</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">group1</span>, <span class="va">group2</span>, <span class="va">p_adj</span>, <span class="va">p_adj_mark</span>, <span class="va">effect_size</span>, <span class="va">ci_low</span>, <span class="va">ci_high</span>, <span class="va">ci_low_adj</span>, <span class="va">ci_high_adj</span>, <span class="va">n_pair</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -328,7 +336,7 @@ GES</li>
 </div>
 </div>
 <div class="section level2">
-<h2 id="パラメトリック対応なしwelch分散分析">2. パラメトリック・対応なし（Welch分散分析）<a class="anchor" aria-label="anchor" href="#%E3%83%91%E3%83%A9%E3%83%A1%E3%83%88%E3%83%AA%E3%83%83%E3%82%AF%E5%AF%BE%E5%BF%9C%E3%81%AA%E3%81%97welch%E5%88%86%E6%95%A3%E5%88%86%E6%9E%90"></a>
+<h2 id="パラメトリック対応なしwelch分散分析">2. パラメトリック・対応なし：Welch分散分析<a class="anchor" aria-label="anchor" href="#%E3%83%91%E3%83%A9%E3%83%A1%E3%83%88%E3%83%AA%E3%83%83%E3%82%AF%E5%AF%BE%E5%BF%9C%E3%81%AA%E3%81%97welch%E5%88%86%E6%95%A3%E5%88%86%E6%9E%90"></a>
 </h2>
 <div class="section level3">
 <h3 id="この手法での採用方法本パッケージの設計-1">2.1 この手法での採用方法（本パッケージの設計）<a class="anchor" aria-label="anchor" href="#%E3%81%93%E3%81%AE%E6%89%8B%E6%B3%95%E3%81%A7%E3%81%AE%E6%8E%A1%E7%94%A8%E6%96%B9%E6%B3%95%E6%9C%AC%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E3%81%AE%E8%A8%AD%E8%A8%88-1"></a>
@@ -353,7 +361,7 @@ GES</li>
 </ul>
 </div>
 <div class="section level3">
-<h3 id="データ既存データセット">2.2 データ（既存データセット）<a class="anchor" aria-label="anchor" href="#%E3%83%87%E3%83%BC%E3%82%BF%E6%97%A2%E5%AD%98%E3%83%87%E3%83%BC%E3%82%BF%E3%82%BB%E3%83%83%E3%83%88"></a>
+<h3 id="データ-1">2.2 データ<a class="anchor" aria-label="anchor" href="#%E3%83%87%E3%83%BC%E3%82%BF-1"></a>
 </h3>
 <p>ここでは <code><a href="https://rdrr.io/r/datasets/PlantGrowth.html" class="external-link">datasets::PlantGrowth</a></code>
 を用います（ロング形式）。</p>
@@ -363,7 +371,7 @@ GES</li>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">weight</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="オムニバスwelch_anova_omnibus">2.3 オムニバス（<code>welch_anova_omnibus()</code>）<a class="anchor" aria-label="anchor" href="#%E3%82%AA%E3%83%A0%E3%83%8B%E3%83%90%E3%82%B9welch_anova_omnibus"></a>
+<h3 id="オムニバス検定welch_anova_omnibus">2.3 オムニバス検定：<code>welch_anova_omnibus()</code><a class="anchor" aria-label="anchor" href="#%E3%82%AA%E3%83%A0%E3%83%8B%E3%83%90%E3%82%B9%E6%A4%9C%E5%AE%9Awelch_anova_omnibus"></a>
 </h3>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">welch_omni</span> <span class="op">=</span> <span class="fu"><a href="../reference/welch_anova_omnibus.html">welch_anova_omnibus</a></span><span class="op">(</span></span>
@@ -371,9 +379,7 @@ GES</li>
 <span>  dv <span class="op">=</span> <span class="va">y</span>,</span>
 <span>  group <span class="op">=</span> <span class="va">group</span>,</span>
 <span>  missing <span class="op">=</span> <span class="st">"pairwise"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible</a></span><span class="op">(</span><span class="va">welch_omni</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="出力の解釈要点-2">出力の解釈（要点）<a class="anchor" aria-label="anchor" href="#%E5%87%BA%E5%8A%9B%E3%81%AE%E8%A7%A3%E9%87%88%E8%A6%81%E7%82%B9-2"></a>
 </h4>
@@ -389,13 +395,16 @@ GES</li>
 </ul>
 </li>
 </ul>
-<p>（確認用の操作例：本ビネットでは実行しません）</p>
+</div>
+<div class="section level4">
+<h4 id="結果データ内の主要情報の表示-2">結果データ内の主要情報の表示<a class="anchor" aria-label="anchor" href="#%E7%B5%90%E6%9E%9C%E3%83%87%E3%83%BC%E3%82%BF%E5%86%85%E3%81%AE%E4%B8%BB%E8%A6%81%E6%83%85%E5%A0%B1%E3%81%AE%E8%A1%A8%E7%A4%BA-2"></a>
+</h4>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">welch_omni</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">term</span>, <span class="va">statistic</span>, <span class="va">df1</span>, <span class="va">df2</span>, <span class="va">p</span>, <span class="va">effect_size</span>, <span class="va">effect_size_type</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
-<h3 id="事後welch_posthoc">2.4 事後（<code>welch_posthoc()</code>）<a class="anchor" aria-label="anchor" href="#%E4%BA%8B%E5%BE%8Cwelch_posthoc"></a>
+<h3 id="事後検定welch_posthoc">2.4 事後検定：<code>welch_posthoc()</code><a class="anchor" aria-label="anchor" href="#%E4%BA%8B%E5%BE%8C%E6%A4%9C%E5%AE%9Awelch_posthoc"></a>
 </h3>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">welch_post</span> <span class="op">=</span> <span class="fu"><a href="../reference/welch_posthoc.html">welch_posthoc</a></span><span class="op">(</span></span>
@@ -405,9 +414,7 @@ GES</li>
 <span>  p_adjust_method <span class="op">=</span> <span class="st">"holm"</span>,</span>
 <span>  ci_adjust_method <span class="op">=</span> <span class="st">"bonferroni"</span>,</span>
 <span>  missing <span class="op">=</span> <span class="st">"pairwise"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible</a></span><span class="op">(</span><span class="va">welch_post</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="出力の解釈要点-3">出力の解釈（要点）<a class="anchor" aria-label="anchor" href="#%E5%87%BA%E5%8A%9B%E3%81%AE%E8%A7%A3%E9%87%88%E8%A6%81%E7%82%B9-3"></a>
 </h4>
@@ -423,7 +430,10 @@ GES</li>
 <li>CI（未補正／補正）と <code>ci_adjust_method</code>
 </li>
 </ul>
-<p>（確認用の操作例：本ビネットでは実行しません）</p>
+</div>
+<div class="section level4">
+<h4 id="結果データ内の主要情報の表示-3">結果データ内の主要情報の表示<a class="anchor" aria-label="anchor" href="#%E7%B5%90%E6%9E%9C%E3%83%87%E3%83%BC%E3%82%BF%E5%86%85%E3%81%AE%E4%B8%BB%E8%A6%81%E6%83%85%E5%A0%B1%E3%81%AE%E8%A1%A8%E7%A4%BA-3"></a>
+</h4>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">welch_post</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">group1</span>, <span class="va">group2</span>, <span class="va">p_adj</span>, <span class="va">p_adj_mark</span>, <span class="va">effect_size</span>, <span class="va">ci_low</span>, <span class="va">ci_high</span>, <span class="va">ci_low_adj</span>, <span class="va">ci_high_adj</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -433,7 +443,7 @@ GES</li>
 </div>
 </div>
 <div class="section level2">
-<h2 id="非パラメトリック対応ありフリードマン検定">3. 非パラメトリック・対応あり（フリードマン検定）<a class="anchor" aria-label="anchor" href="#%E9%9D%9E%E3%83%91%E3%83%A9%E3%83%A1%E3%83%88%E3%83%AA%E3%83%83%E3%82%AF%E5%AF%BE%E5%BF%9C%E3%81%82%E3%82%8A%E3%83%95%E3%83%AA%E3%83%BC%E3%83%89%E3%83%9E%E3%83%B3%E6%A4%9C%E5%AE%9A"></a>
+<h2 id="非パラメトリック対応ありフリードマン検定">3. 非パラメトリック・対応あり：フリードマン検定<a class="anchor" aria-label="anchor" href="#%E9%9D%9E%E3%83%91%E3%83%A9%E3%83%A1%E3%83%88%E3%83%AA%E3%83%83%E3%82%AF%E5%AF%BE%E5%BF%9C%E3%81%82%E3%82%8A%E3%83%95%E3%83%AA%E3%83%BC%E3%83%89%E3%83%9E%E3%83%B3%E6%A4%9C%E5%AE%9A"></a>
 </h2>
 <div class="section level3">
 <h3 id="この手法での採用方法本パッケージの設計-2">3.1 この手法での採用方法（本パッケージの設計）<a class="anchor" aria-label="anchor" href="#%E3%81%93%E3%81%AE%E6%89%8B%E6%B3%95%E3%81%A7%E3%81%AE%E6%8E%A1%E7%94%A8%E6%96%B9%E6%B3%95%E6%9C%AC%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E3%81%AE%E8%A8%AD%E8%A8%88-2"></a>
@@ -466,7 +476,7 @@ TRUE）</strong>
 </ul>
 </div>
 <div class="section level3">
-<h3 id="データ既存データセット-1">3.2 データ（既存データセット）<a class="anchor" aria-label="anchor" href="#%E3%83%87%E3%83%BC%E3%82%BF%E6%97%A2%E5%AD%98%E3%83%87%E3%83%BC%E3%82%BF%E3%82%BB%E3%83%83%E3%83%88-1"></a>
+<h3 id="データ-2">3.2 データ<a class="anchor" aria-label="anchor" href="#%E3%83%87%E3%83%BC%E3%82%BF-2"></a>
 </h3>
 <p>反復測定と同様に <code><a href="https://rdrr.io/r/datasets/zCO2.html" class="external-link">datasets::CO2</a></code> を用い、within =
 <code>conc</code>, id = <code>Plant</code> とします。</p>
@@ -479,7 +489,7 @@ TRUE）</strong>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Plant</span>, <span class="va">conc</span>, <span class="va">uptake</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="オムニバスfriedman_omnibus">3.3 オムニバス（<code>friedman_omnibus()</code>）<a class="anchor" aria-label="anchor" href="#%E3%82%AA%E3%83%A0%E3%83%8B%E3%83%90%E3%82%B9friedman_omnibus"></a>
+<h3 id="オムニバス検定friedman_omnibus">3.3 オムニバス検定：<code>friedman_omnibus()</code><a class="anchor" aria-label="anchor" href="#%E3%82%AA%E3%83%A0%E3%83%8B%E3%83%90%E3%82%B9%E6%A4%9C%E5%AE%9Afriedman_omnibus"></a>
 </h3>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fr_omni</span> <span class="op">=</span> <span class="fu"><a href="../reference/friedman_omnibus.html">friedman_omnibus</a></span><span class="op">(</span></span>
@@ -488,9 +498,7 @@ TRUE）</strong>
 <span>  within <span class="op">=</span> <span class="va">conc</span>,</span>
 <span>  id <span class="op">=</span> <span class="va">Plant</span>,</span>
 <span>  missing <span class="op">=</span> <span class="st">"pairwise"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible</a></span><span class="op">(</span><span class="va">fr_omni</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="出力の解釈要点-4">出力の解釈（要点）<a class="anchor" aria-label="anchor" href="#%E5%87%BA%E5%8A%9B%E3%81%AE%E8%A7%A3%E9%87%88%E8%A6%81%E7%82%B9-4"></a>
 </h4>
@@ -503,13 +511,16 @@ TRUE）</strong>
 <code>effect_size</code>
 </li>
 </ul>
-<p>（確認用の操作例：本ビネットでは実行しません）</p>
+</div>
+<div class="section level4">
+<h4 id="結果データ内の主要情報の表示-4">結果データ内の主要情報の表示<a class="anchor" aria-label="anchor" href="#%E7%B5%90%E6%9E%9C%E3%83%87%E3%83%BC%E3%82%BF%E5%86%85%E3%81%AE%E4%B8%BB%E8%A6%81%E6%83%85%E5%A0%B1%E3%81%AE%E8%A1%A8%E7%A4%BA-4"></a>
+</h4>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fr_omni</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">term</span>, <span class="va">statistic</span>, <span class="va">df</span>, <span class="va">p</span>, <span class="va">effect_size</span>, <span class="va">effect_size_type</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
-<h3 id="事後friedman_posthoc">3.4 事後（<code>friedman_posthoc()</code>）<a class="anchor" aria-label="anchor" href="#%E4%BA%8B%E5%BE%8Cfriedman_posthoc"></a>
+<h3 id="事後検定friedman_posthoc">3.4 事後検定：<code>friedman_posthoc()</code><a class="anchor" aria-label="anchor" href="#%E4%BA%8B%E5%BE%8C%E6%A4%9C%E5%AE%9Afriedman_posthoc"></a>
 </h3>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fr_post</span> <span class="op">=</span> <span class="fu"><a href="../reference/friedman_posthoc.html">friedman_posthoc</a></span><span class="op">(</span></span>
@@ -521,9 +532,7 @@ TRUE）</strong>
 <span>  ci_adjust_method <span class="op">=</span> <span class="st">"bonferroni"</span>,</span>
 <span>  missing <span class="op">=</span> <span class="st">"pairwise"</span>,</span>
 <span>  duplicate <span class="op">=</span> <span class="st">"mean"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible</a></span><span class="op">(</span><span class="va">fr_post</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="出力の解釈要点-5">出力の解釈（要点）<a class="anchor" aria-label="anchor" href="#%E5%87%BA%E5%8A%9B%E3%81%AE%E8%A7%A3%E9%87%88%E8%A6%81%E7%82%B9-5"></a>
 </h4>
@@ -537,7 +546,10 @@ TRUE）</strong>
 <li>CI（未補正／補正）と <code>n_pair</code>
 </li>
 </ul>
-<p>（確認用の操作例：本ビネットでは実行しません）</p>
+</div>
+<div class="section level4">
+<h4 id="結果データ内の主要情報の表示-5">結果データ内の主要情報の表示<a class="anchor" aria-label="anchor" href="#%E7%B5%90%E6%9E%9C%E3%83%87%E3%83%BC%E3%82%BF%E5%86%85%E3%81%AE%E4%B8%BB%E8%A6%81%E6%83%85%E5%A0%B1%E3%81%AE%E8%A1%A8%E7%A4%BA-5"></a>
+</h4>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fr_post</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">group1</span>, <span class="va">group2</span>, <span class="va">p_adj</span>, <span class="va">p_adj_mark</span>, <span class="va">effect_size</span>, <span class="va">ci_low</span>, <span class="va">ci_high</span>, <span class="va">ci_low_adj</span>, <span class="va">ci_high_adj</span>, <span class="va">n_pair</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -547,7 +559,7 @@ TRUE）</strong>
 </div>
 </div>
 <div class="section level2">
-<h2 id="非パラメトリック対応なしクラスカルウォリス検定">4. 非パラメトリック・対応なし（クラスカル・ウォリス検定）<a class="anchor" aria-label="anchor" href="#%E9%9D%9E%E3%83%91%E3%83%A9%E3%83%A1%E3%83%88%E3%83%AA%E3%83%83%E3%82%AF%E5%AF%BE%E5%BF%9C%E3%81%AA%E3%81%97%E3%82%AF%E3%83%A9%E3%82%B9%E3%82%AB%E3%83%AB%E3%82%A6%E3%82%A9%E3%83%AA%E3%82%B9%E6%A4%9C%E5%AE%9A"></a>
+<h2 id="非パラメトリック対応なしクラスカルウォリス検定">4. 非パラメトリック・対応なし：クラスカル・ウォリス検定<a class="anchor" aria-label="anchor" href="#%E9%9D%9E%E3%83%91%E3%83%A9%E3%83%A1%E3%83%88%E3%83%AA%E3%83%83%E3%82%AF%E5%AF%BE%E5%BF%9C%E3%81%AA%E3%81%97%E3%82%AF%E3%83%A9%E3%82%B9%E3%82%AB%E3%83%AB%E3%82%A6%E3%82%A9%E3%83%AA%E3%82%B9%E6%A4%9C%E5%AE%9A"></a>
 </h2>
 <div class="section level3">
 <h3 id="この手法での採用方法本パッケージの設計-3">4.1 この手法での採用方法（本パッケージの設計）<a class="anchor" aria-label="anchor" href="#%E3%81%93%E3%81%AE%E6%89%8B%E6%B3%95%E3%81%A7%E3%81%AE%E6%8E%A1%E7%94%A8%E6%96%B9%E6%B3%95%E6%9C%AC%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E3%81%AE%E8%A8%AD%E8%A8%88-3"></a>
@@ -573,7 +585,7 @@ FALSE）</strong>
 </ul>
 </div>
 <div class="section level3">
-<h3 id="データ既存データセット-2">4.2 データ（既存データセット）<a class="anchor" aria-label="anchor" href="#%E3%83%87%E3%83%BC%E3%82%BF%E6%97%A2%E5%AD%98%E3%83%87%E3%83%BC%E3%82%BF%E3%82%BB%E3%83%83%E3%83%88-2"></a>
+<h3 id="データ-3">4.2 データ<a class="anchor" aria-label="anchor" href="#%E3%83%87%E3%83%BC%E3%82%BF-3"></a>
 </h3>
 <p>Welchと同様に <code><a href="https://rdrr.io/r/datasets/PlantGrowth.html" class="external-link">datasets::PlantGrowth</a></code> を用います。</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
@@ -582,7 +594,7 @@ FALSE）</strong>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">weight</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="オムニバスkruskal_omnibus">4.3 オムニバス（<code>kruskal_omnibus()</code>）<a class="anchor" aria-label="anchor" href="#%E3%82%AA%E3%83%A0%E3%83%8B%E3%83%90%E3%82%B9kruskal_omnibus"></a>
+<h3 id="オムニバス検定kruskal_omnibus">4.3 オムニバス検定：<code>kruskal_omnibus()</code><a class="anchor" aria-label="anchor" href="#%E3%82%AA%E3%83%A0%E3%83%8B%E3%83%90%E3%82%B9%E6%A4%9C%E5%AE%9Akruskal_omnibus"></a>
 </h3>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kw_omni</span> <span class="op">=</span> <span class="fu"><a href="../reference/kruskal_omnibus.html">kruskal_omnibus</a></span><span class="op">(</span></span>
@@ -590,9 +602,7 @@ FALSE）</strong>
 <span>  dv <span class="op">=</span> <span class="va">y</span>,</span>
 <span>  group <span class="op">=</span> <span class="va">group</span>,</span>
 <span>  missing <span class="op">=</span> <span class="st">"pairwise"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible</a></span><span class="op">(</span><span class="va">kw_omni</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="出力の解釈要点-6">出力の解釈（要点）<a class="anchor" aria-label="anchor" href="#%E5%87%BA%E5%8A%9B%E3%81%AE%E8%A7%A3%E9%87%88%E8%A6%81%E7%82%B9-6"></a>
 </h4>
@@ -605,13 +615,16 @@ FALSE）</strong>
 <code>effect_size</code>
 </li>
 </ul>
-<p>（確認用の操作例：本ビネットでは実行しません）</p>
+</div>
+<div class="section level4">
+<h4 id="結果データ内の主要情報の表示-6">結果データ内の主要情報の表示<a class="anchor" aria-label="anchor" href="#%E7%B5%90%E6%9E%9C%E3%83%87%E3%83%BC%E3%82%BF%E5%86%85%E3%81%AE%E4%B8%BB%E8%A6%81%E6%83%85%E5%A0%B1%E3%81%AE%E8%A1%A8%E7%A4%BA-6"></a>
+</h4>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kw_omni</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">term</span>, <span class="va">statistic</span>, <span class="va">df</span>, <span class="va">p</span>, <span class="va">effect_size</span>, <span class="va">effect_size_type</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
-<h3 id="事後kruskal_posthoc">4.4 事後（<code>kruskal_posthoc()</code>）<a class="anchor" aria-label="anchor" href="#%E4%BA%8B%E5%BE%8Ckruskal_posthoc"></a>
+<h3 id="事後検定kruskal_posthoc">4.4 事後検定：<code>kruskal_posthoc()</code><a class="anchor" aria-label="anchor" href="#%E4%BA%8B%E5%BE%8C%E6%A4%9C%E5%AE%9Akruskal_posthoc"></a>
 </h3>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kw_post</span> <span class="op">=</span> <span class="fu"><a href="../reference/kruskal_posthoc.html">kruskal_posthoc</a></span><span class="op">(</span></span>
@@ -621,9 +634,7 @@ FALSE）</strong>
 <span>  p_adjust_method <span class="op">=</span> <span class="st">"holm"</span>,</span>
 <span>  ci_adjust_method <span class="op">=</span> <span class="st">"bonferroni"</span>,</span>
 <span>  missing <span class="op">=</span> <span class="st">"pairwise"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible</a></span><span class="op">(</span><span class="va">kw_post</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="出力の解釈要点-7">出力の解釈（要点）<a class="anchor" aria-label="anchor" href="#%E5%87%BA%E5%8A%9B%E3%81%AE%E8%A7%A3%E9%87%88%E8%A6%81%E7%82%B9-7"></a>
 </h4>
@@ -640,7 +651,10 @@ FALSE）</strong>
 <li>CI（未補正／補正）と <code>ci_adjust_method</code>
 </li>
 </ul>
-<p>（確認用の操作例：本ビネットでは実行しません）</p>
+</div>
+<div class="section level4">
+<h4 id="結果データ内の主要情報の表示-7">結果データ内の主要情報の表示<a class="anchor" aria-label="anchor" href="#%E7%B5%90%E6%9E%9C%E3%83%87%E3%83%BC%E3%82%BF%E5%86%85%E3%81%AE%E4%B8%BB%E8%A6%81%E6%83%85%E5%A0%B1%E3%81%AE%E8%A1%A8%E7%A4%BA-7"></a>
+</h4>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kw_post</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">group1</span>, <span class="va">group2</span>, <span class="va">p_adj</span>, <span class="va">p_adj_mark</span>, <span class="va">effect_size</span>, <span class="va">ci_low</span>, <span class="va">ci_high</span>, <span class="va">ci_low_adj</span>, <span class="va">ci_high_adj</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>

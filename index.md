@@ -17,5 +17,5 @@ pak::pak("tsuda16k/sistatica")
 リファレンスページはこちら。  
 <https://tsuda16k.github.io/sistatica/>
 
-1要因分散分析
+1要因分散分析  
 <https://tsuda16k.github.io/sistatica/articles/analysis-anova.html>

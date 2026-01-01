@@ -2,10 +2,12 @@
 
 ## 0. イントロダクション
 
-このビネットは、**sistatica** パッケージで提供される 4
-種類の一要因デザインについて、**オムニバス検定**と**事後検定（ペア比較）**を実行する際の、パッケージ固有の仕様・引数・出力の読み方をまとめます。
+このページでは、**sistatica**
+パッケージを用いて1要因の分散分析を行う方法を説明します。
 
-### 0.1 関数一覧
+4種類の1要因分散分析デザインごとに、**オムニバス検定**と**事後検定（ペア比較）**を行う関数が用意されています。
+
+### 関数一覧
 
 | 手法                                         | オムニバス検定                                                                                   | 事後検定                                                                                   |
 |----------------------------------------------|--------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
@@ -20,25 +22,25 @@ library(dplyr)
 library(magrittr)
 ```
 
-### 0.2 入力データ形式（ロング形式）
+### 入力データ形式（ロング形式）
 
 本パッケージは、全て **ロング形式**のデータを前提とします。
 
 - 反復測定 / Friedman: `dv`（数値）, `within`（条件）, `id`（被験者ID）
 - Welch / Kruskal-Wallis: `dv`（数値）, `group`（群）
 
-### 0.3 “有意”表示（`p_adj_mark`）
+### “有意”表示記号
 
-事後検定の返り値には、視覚的な便宜のために `p_adj_mark` 列が含まれます。
+事後検定の返り値には `p_adj_mark` 列が含まれます。
 
 - `p_adj < 0.05` のとき `"*"`
 - それ以外（および `p_adj` が `NA`）は `""`（空文字）
 
 ※ 有意水準 0.05 は固定仕様です。
 
-### 0.4 p値補正とCI補正の扱い（独立）
+### p値補正とCI補正の扱い
 
-事後検定では、p値補正と効果量CI補正は **独立**です。
+事後検定では、p値補正と効果量CI補正は **独立**して指定します。
 
 - p値補正: `p_adjust_method`（推奨例: `"holm"`）
 - CI補正: `ci_adjust_method`（推奨例: `"bonferroni"`、選択肢は `"none"`,
@@ -56,9 +58,10 @@ library(magrittr)
 
 なお、CI補正は **その関数が返すペア数（比較数）**に基づいて行われます。
 
-### 0.5 欠損の扱い（`missing`）
+### 欠損の扱い（`missing` 引数）
 
-`missing` は `"pairwise"`（デフォルト）と `"complete_case"` を持ちます。
+`missing` 引数は `"pairwise"`（デフォルト）と `"complete_case"`
+から選びます。
 
 - 反復測定 / Friedman（対応あり）
   - `"pairwise"`: 行単位で `dv/within/id` の欠損を除いた後、効果量とCIは
@@ -68,7 +71,7 @@ library(magrittr)
 - Welch / Kruskal-Wallis（対応なし）
   - 実質的にどちらも「欠損行を落とす」挙動になりやすいですが、APIとして引数は残しています。
 
-### 0.6 重複セル（ID×within）の扱い（対応ありの事後検定）
+### 重複セル（ID×within）の扱い（「対応あり」の事後検定を行う場合）
 
 対応あり（[`rm_posthoc()`](https://tsuda16k.github.io/sistatica/reference/rm_posthoc.md),
 [`friedman_posthoc()`](https://tsuda16k.github.io/sistatica/reference/friedman_posthoc.md)）では、`id × within`
@@ -86,7 +89,7 @@ non-NA）を取ります。
 
 ------------------------------------------------------------------------
 
-## 1. パラメトリック・対応あり（反復測定分散分析）
+## 1. パラメトリック・対応あり：反復測定分散分析
 
 ### 1.1 この手法での採用方法（本パッケージの設計）
 
@@ -101,7 +104,7 @@ non-NA）を取ります。
     による解析的CI
   - p値補正 / CI補正は独立（イントロ参照）
 
-### 1.2 データ（ロング形式の既存データセット）
+### 1.2 データ
 
 ここでは [`datasets::CO2`](https://rdrr.io/r/datasets/zCO2.html)
 を用います（ロング形式、`Plant` がID、`conc` が within）。
@@ -118,7 +121,7 @@ dat_rm_small = dat_rm %>%
   dplyr::select(Plant, conc, uptake)
 ```
 
-### 1.3 オムニバス（`rm_anova_omnibus()`）
+### 1.3 オムニバス検定：`rm_anova_omnibus()`
 
 ``` r
 rm_omni = rm_anova_omnibus(
@@ -136,13 +139,13 @@ rm_omni = rm_anova_omnibus(
 - `effect_size_type = "ges"` と `effect_size` が GES
 - `missing`, `n_obs`, `n_id` はデータ処理の要約
 
-（確認用の操作例：本ビネットでは実行しません）
+#### 結果データ内の主要情報の表示
 
 ``` r
 rm_omni %>% dplyr::select(term, statistic, df1, df2, p, effect_size, effect_size_type, n_id, missing)
 ```
 
-### 1.4 事後（`rm_posthoc()`）
+### 1.4 事後検定：`rm_posthoc()`
 
 ``` r
 rm_post = rm_posthoc(
@@ -168,7 +171,7 @@ rm_post = rm_posthoc(
     `ci_adjust_method`）
 - `n_pair` はそのペアで効果量・CIに使えた対応データ数
 
-（確認用の操作例：本ビネットでは実行しません）
+#### 結果データ内の主要情報の表示
 
 ``` r
 rm_post %>%
@@ -178,7 +181,7 @@ rm_post %>%
 
 ------------------------------------------------------------------------
 
-## 2. パラメトリック・対応なし（Welch分散分析）
+## 2. パラメトリック・対応なし：Welch分散分析
 
 ### 2.1 この手法での採用方法（本パッケージの設計）
 
@@ -191,7 +194,7 @@ rm_post %>%
   - 効果量CI: `effectsize::hedges_g(pooled_sd = FALSE)` の解析的CI
   - p値補正 / CI補正は独立（イントロ参照）
 
-### 2.2 データ（既存データセット）
+### 2.2 データ
 
 ここでは
 [`datasets::PlantGrowth`](https://rdrr.io/r/datasets/PlantGrowth.html)
@@ -203,7 +206,7 @@ dat_welch = datasets::PlantGrowth %>%
   dplyr::rename(y = weight)
 ```
 
-### 2.3 オムニバス（`welch_anova_omnibus()`）
+### 2.3 オムニバス検定：`welch_anova_omnibus()`
 
 ``` r
 welch_omni = welch_anova_omnibus(
@@ -212,8 +215,6 @@ welch_omni = welch_anova_omnibus(
   group = group,
   missing = "pairwise"
 )
-
-invisible(welch_omni)
 ```
 
 #### 出力の解釈（要点）
@@ -223,13 +224,13 @@ invisible(welch_omni)
   - Welch ANOVA に対する omega²
     は便宜的に提供される**近似**であり、厳密な等分散前提のomega²と同一視しない（パッケージの注記）。
 
-（確認用の操作例：本ビネットでは実行しません）
+#### 結果データ内の主要情報の表示
 
 ``` r
 welch_omni %>% dplyr::select(term, statistic, df1, df2, p, effect_size, effect_size_type)
 ```
 
-### 2.4 事後（`welch_posthoc()`）
+### 2.4 事後検定：`welch_posthoc()`
 
 ``` r
 welch_post = welch_posthoc(
@@ -240,8 +241,6 @@ welch_post = welch_posthoc(
   ci_adjust_method = "bonferroni",
   missing = "pairwise"
 )
-
-invisible(welch_post)
 ```
 
 #### 出力の解釈（要点）
@@ -251,7 +250,7 @@ invisible(welch_post)
 - 効果量: `effect_size_type = "hedges_g"` と `effect_size`
 - CI（未補正／補正）と `ci_adjust_method`
 
-（確認用の操作例：本ビネットでは実行しません）
+#### 結果データ内の主要情報の表示
 
 ``` r
 welch_post %>%
@@ -261,7 +260,7 @@ welch_post %>%
 
 ------------------------------------------------------------------------
 
-## 3. 非パラメトリック・対応あり（フリードマン検定）
+## 3. 非パラメトリック・対応あり：フリードマン検定
 
 ### 3.1 この手法での採用方法（本パッケージの設計）
 
@@ -278,7 +277,7 @@ welch_post %>%
   - オムニバスは unreplicated complete block を要求（重複は停止）
   - 事後は `duplicate` で集約可能
 
-### 3.2 データ（既存データセット）
+### 3.2 データ
 
 反復測定と同様に [`datasets::CO2`](https://rdrr.io/r/datasets/zCO2.html)
 を用い、within = `conc`, id = `Plant` とします。
@@ -292,7 +291,7 @@ dat_fr = datasets::CO2 %>%
   dplyr::select(Plant, conc, uptake)
 ```
 
-### 3.3 オムニバス（`friedman_omnibus()`）
+### 3.3 オムニバス検定：`friedman_omnibus()`
 
 ``` r
 fr_omni = friedman_omnibus(
@@ -302,8 +301,6 @@ fr_omni = friedman_omnibus(
   id = Plant,
   missing = "pairwise"
 )
-
-invisible(fr_omni)
 ```
 
 #### 出力の解釈（要点）
@@ -311,13 +308,13 @@ invisible(fr_omni)
 - `statistic_type = "chi_squared"` と `statistic`, `df`, `p`
 - 効果量: `effect_size_type = "kendalls_W"` と `effect_size`
 
-（確認用の操作例：本ビネットでは実行しません）
+#### 結果データ内の主要情報の表示
 
 ``` r
 fr_omni %>% dplyr::select(term, statistic, df, p, effect_size, effect_size_type)
 ```
 
-### 3.4 事後（`friedman_posthoc()`）
+### 3.4 事後検定：`friedman_posthoc()`
 
 ``` r
 fr_post = friedman_posthoc(
@@ -330,8 +327,6 @@ fr_post = friedman_posthoc(
   missing = "pairwise",
   duplicate = "mean"
 )
-
-invisible(fr_post)
 ```
 
 #### 出力の解釈（要点）
@@ -340,7 +335,7 @@ invisible(fr_post)
 - 効果量: `effect_size_type = "rank_biserial"` と `effect_size`
 - CI（未補正／補正）と `n_pair`
 
-（確認用の操作例：本ビネットでは実行しません）
+#### 結果データ内の主要情報の表示
 
 ``` r
 fr_post %>%
@@ -350,7 +345,7 @@ fr_post %>%
 
 ------------------------------------------------------------------------
 
-## 4. 非パラメトリック・対応なし（クラスカル・ウォリス検定）
+## 4. 非パラメトリック・対応なし：クラスカル・ウォリス検定
 
 ### 4.1 この手法での採用方法（本パッケージの設計）
 
@@ -364,7 +359,7 @@ fr_post %>%
   - 効果量CI: `effectsize::rank_biserial(paired=FALSE)` の解析的CI
   - p値補正 / CI補正は独立（イントロ参照）
 
-### 4.2 データ（既存データセット）
+### 4.2 データ
 
 Welchと同様に
 [`datasets::PlantGrowth`](https://rdrr.io/r/datasets/PlantGrowth.html)
@@ -376,7 +371,7 @@ dat_kw = datasets::PlantGrowth %>%
   dplyr::rename(y = weight)
 ```
 
-### 4.3 オムニバス（`kruskal_omnibus()`）
+### 4.3 オムニバス検定：`kruskal_omnibus()`
 
 ``` r
 kw_omni = kruskal_omnibus(
@@ -385,8 +380,6 @@ kw_omni = kruskal_omnibus(
   group = group,
   missing = "pairwise"
 )
-
-invisible(kw_omni)
 ```
 
 #### 出力の解釈（要点）
@@ -394,13 +387,13 @@ invisible(kw_omni)
 - `statistic_type = "H"` と `statistic`, `df`, `p`
 - 効果量: `effect_size_type = "eta2_H"` と `effect_size`
 
-（確認用の操作例：本ビネットでは実行しません）
+#### 結果データ内の主要情報の表示
 
 ``` r
 kw_omni %>% dplyr::select(term, statistic, df, p, effect_size, effect_size_type)
 ```
 
-### 4.4 事後（`kruskal_posthoc()`）
+### 4.4 事後検定：`kruskal_posthoc()`
 
 ``` r
 kw_post = kruskal_posthoc(
@@ -411,8 +404,6 @@ kw_post = kruskal_posthoc(
   ci_adjust_method = "bonferroni",
   missing = "pairwise"
 )
-
-invisible(kw_post)
 ```
 
 #### 出力の解釈（要点）
@@ -422,7 +413,7 @@ invisible(kw_post)
 - 効果量: `effect_size_type = "rank_biserial"` と `effect_size`
 - CI（未補正／補正）と `ci_adjust_method`
 
-（確認用の操作例：本ビネットでは実行しません）
+#### 結果データ内の主要情報の表示
 
 ``` r
 kw_post %>%
