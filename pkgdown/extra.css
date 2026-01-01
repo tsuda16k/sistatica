@@ -1,0 +1,10 @@
+/* Article pages: hide the right-side TOC and expand content to full width */
+div.container.template-article .col-md-3 {
+  display: none;
+}
+
+div.container.template-article .col-md-9 {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
