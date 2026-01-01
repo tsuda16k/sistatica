@@ -18,11 +18,13 @@ RoxygenNote: 7.3.3
 Imports: 
     stats,
     magrittr,
+    rlang,
     dplyr,
-    tidyr,
     tibble,
     rstatix,
+    effectsize
 Suggests:
+    tidyr,
     ggplot2,
     knitr,
     rmarkdown,
